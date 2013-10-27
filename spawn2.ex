@@ -1,0 +1,25 @@
+defmodule Spawn2 do
+  def greet do
+    receive do
+      {sender, msg} ->
+        sender <- {:ok, "Hello #{msg}"}
+    end
+  end
+end
+
+# here's a client
+pid = spawn(Spawn2, :greet, [])
+pid <- {self, "World!"}
+
+receive do
+  {:ok, message} ->
+    IO.puts message
+end
+
+# here's another client
+pid <- {self, "Kermit!"}
+
+receive do
+  {:ok, message} ->
+    IO.puts message
+end
